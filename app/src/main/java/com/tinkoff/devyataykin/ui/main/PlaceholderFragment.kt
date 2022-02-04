@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.tinkoff.devyataykin.R
 import com.tinkoff.devyataykin.databinding.FragmentMainBinding
 
@@ -42,6 +43,10 @@ class PlaceholderFragment : Fragment() {
         pageViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
+
+        val imageView = binding.gifImageView
+        imageView.clipToOutline = true
+        Glide.with(this).load(R.drawable.test_example).centerCrop().into(imageView)
         return root
     }
 
