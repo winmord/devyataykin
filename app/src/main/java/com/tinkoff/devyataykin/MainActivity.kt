@@ -1,6 +1,7 @@
 package com.tinkoff.devyataykin
 
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
@@ -31,9 +32,12 @@ class MainActivity : AppCompatActivity() {
 
         val nextGifButton = binding.nextButton
         nextGifButton.setOnClickListener {
-            gifRequester.getGif("random", "")
+            gifRequester.getGif(viewPager.currentItem, "")
         }
 
-
+        val prevGifButton = binding.backButton
+        prevGifButton.setOnClickListener {
+            gifRequester.getPrev()
+        }
     }
 }
