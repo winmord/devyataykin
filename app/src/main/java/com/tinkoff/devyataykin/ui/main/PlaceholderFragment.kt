@@ -9,14 +9,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.tinkoff.devyataykin.R
 import com.tinkoff.devyataykin.databinding.FragmentMainBinding
 
 /**
  * A placeholder fragment containing a simple view.
  */
-class PlaceholderFragment : Fragment() {
-
+class PlaceholderFragment(private val gifRequester: GifRequester) : Fragment() {
     private lateinit var pageViewModel: PageViewModel
     private var _binding: FragmentMainBinding? = null
 
@@ -26,7 +24,7 @@ class PlaceholderFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        pageViewModel = ViewModelProvider(this).get(PageViewModel::class.java).apply {
+        pageViewModel = ViewModelProvider(this, PageViewModelFactory(gifRequester))[PageViewModel::class.java].apply {
             setIndex(arguments?.getInt(ARG_SECTION_NUMBER) ?: 1)
         }
     }
@@ -34,7 +32,7 @@ class PlaceholderFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         val root = binding.root
@@ -46,7 +44,11 @@ class PlaceholderFragment : Fragment() {
 
         val imageView = binding.gifImageView
         imageView.clipToOutline = true
-        Glide.with(this).load(R.drawable.test_example).centerCrop().into(imageView)
+
+        pageViewModel.gifUrl.observe(viewLifecycleOwner, Observer {
+            Glide.with(this).load(it).centerCrop().into(imageView)
+        })
+
         return root
     }
 
@@ -62,8 +64,8 @@ class PlaceholderFragment : Fragment() {
          * number.
          */
         @JvmStatic
-        fun newInstance(sectionNumber: Int): PlaceholderFragment {
-            return PlaceholderFragment().apply {
+        fun newInstance(sectionNumber: Int, gifRequester: GifRequester): PlaceholderFragment {
+            return PlaceholderFragment(gifRequester).apply {
                 arguments = Bundle().apply {
                     putInt(ARG_SECTION_NUMBER, sectionNumber)
                 }

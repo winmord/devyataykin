@@ -10,10 +10,12 @@ import android.view.Menu
 import android.view.MenuItem
 import com.tinkoff.devyataykin.ui.main.SectionsPagerAdapter
 import com.tinkoff.devyataykin.databinding.ActivityMainBinding
+import com.tinkoff.devyataykin.ui.main.GifRequester
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private val gifRequester = GifRequester()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,10 +23,17 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
+        val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager, gifRequester)
         val viewPager: ViewPager = binding.viewPager
         viewPager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = binding.tabs
         tabs.setupWithViewPager(viewPager)
+
+        val nextGifButton = binding.nextButton
+        nextGifButton.setOnClickListener {
+            gifRequester.getGif("random", "")
+        }
+
+
     }
 }
