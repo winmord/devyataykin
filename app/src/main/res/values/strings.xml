@@ -1,5 +1,12 @@
 <resources>
-    <string name="app_name">devyataykin</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
+    <string name="app_name">Developers Life</string>
+    <string name="tab_text_1">Последние</string>
+    <string name="tab_text_2">Лучшие</string>
+    <string name="tab_text_3">Горячие</string>
+    <string name="gif">gif</string>
+    <string name="back_button">back_button</string>
+    <string name="next_button">next_button</string>
+    <string name="no_internet">Произошла ошибка при загрузке данных. Проверьте подключение к сети.</string>
+    <string name="no_internet_retry">ПОВТОРИТЬ</string>
+    <string name="EmptyCategory">Здесь пока ничего нет.</string>
 </resources>

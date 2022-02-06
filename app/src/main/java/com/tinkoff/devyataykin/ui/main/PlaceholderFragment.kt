@@ -6,26 +6,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
+import com.bumptech.glide.Glide
 import com.tinkoff.devyataykin.R
 import com.tinkoff.devyataykin.databinding.FragmentMainBinding
 
-/**
- * A placeholder fragment containing a simple view.
- */
-class PlaceholderFragment : Fragment() {
 
+class PlaceholderFragment(private val gifRequester: GifRequester) : Fragment() {
     private lateinit var pageViewModel: PageViewModel
     private var _binding: FragmentMainBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        pageViewModel = ViewModelProvider(this).get(PageViewModel::class.java).apply {
+        pageViewModel = ViewModelProvider(
+            this,
+            PageViewModelFactory(gifRequester)
+        )[PageViewModel::class.java].apply {
             setIndex(arguments?.getInt(ARG_SECTION_NUMBER) ?: 1)
         }
     }
@@ -33,32 +32,52 @@ class PlaceholderFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         val root = binding.root
 
         val textView: TextView = binding.sectionLabel
-        pageViewModel.text.observe(viewLifecycleOwner, Observer {
+        pageViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
-        })
+        }
+
+        val imageView = binding.gifImageView
+        val emptyCategoryTextView = binding.emptyCategoryTextView
+        imageView.clipToOutline = true
+
+        val circularProgressDrawable = CircularProgressDrawable(this.requireContext())
+        circularProgressDrawable.strokeWidth = 5f
+        circularProgressDrawable.centerRadius = 30f
+        circularProgressDrawable.start()
+
+        pageViewModel.gifUrl.observe(viewLifecycleOwner) {
+            if (it!! != "empty") {
+                if (it.isNotEmpty()) {
+                    if (emptyCategoryTextView.visibility != View.GONE) {
+                        emptyCategoryTextView.visibility = View.GONE
+                    }
+
+                    Glide.with(this).load(it).placeholder(circularProgressDrawable).centerCrop()
+                        .into(imageView)
+                } else {
+                    Glide.with(this).load(R.color.white).into(imageView)
+                }
+            } else {
+                Glide.with(this).load(R.color.white).into(imageView)
+                emptyCategoryTextView.visibility = View.VISIBLE
+            }
+        }
+
         return root
     }
 
     companion object {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
         private const val ARG_SECTION_NUMBER = "section_number"
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
         @JvmStatic
-        fun newInstance(sectionNumber: Int): PlaceholderFragment {
-            return PlaceholderFragment().apply {
+        fun newInstance(sectionNumber: Int, gifRequester: GifRequester): PlaceholderFragment {
+            return PlaceholderFragment(gifRequester).apply {
                 arguments = Bundle().apply {
                     putInt(ARG_SECTION_NUMBER, sectionNumber)
                 }
