@@ -8,9 +8,11 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.tinkoff.devyataykin.R
 import com.tinkoff.devyataykin.databinding.FragmentMainBinding
+
 
 class PlaceholderFragment(private val gifRequester: GifRequester) : Fragment() {
     private lateinit var pageViewModel: PageViewModel
@@ -20,7 +22,10 @@ class PlaceholderFragment(private val gifRequester: GifRequester) : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        pageViewModel = ViewModelProvider(this, PageViewModelFactory(gifRequester))[PageViewModel::class.java].apply {
+        pageViewModel = ViewModelProvider(
+            this,
+            PageViewModelFactory(gifRequester)
+        )[PageViewModel::class.java].apply {
             setIndex(arguments?.getInt(ARG_SECTION_NUMBER) ?: 1)
         }
     }
@@ -41,9 +46,18 @@ class PlaceholderFragment(private val gifRequester: GifRequester) : Fragment() {
         val imageView = binding.gifImageView
         imageView.clipToOutline = true
 
+        val circularProgressDrawable = CircularProgressDrawable(this.requireContext())
+        circularProgressDrawable.strokeWidth = 5f
+        circularProgressDrawable.centerRadius = 30f
+        circularProgressDrawable.start()
+
         pageViewModel.gifUrl.observe(viewLifecycleOwner, Observer {
-            if(it!!.isNotEmpty()) {
-                Glide.with(this).load(it).centerCrop().into(imageView)
+            if (it!!.isNotEmpty()) {
+                Glide.with(this).
+                load(it).
+                placeholder(circularProgressDrawable).
+                centerCrop().
+                into(imageView)
             } else {
                 Glide.with(this).load(R.drawable.loading).into(imageView)
             }

@@ -3,6 +3,7 @@ package com.tinkoff.devyataykin.ui.main
 import android.net.Uri.Builder
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.tinkoff.devyataykin.R
 import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONException
@@ -29,7 +30,7 @@ class GifRequester {
     }
 
     fun getCurrentGif(category: Int) {
-        gifUrl.postValue("")
+        gifUrl.postValue("R.drawable.loading")
         description.postValue("")
         if (gifs[category]!!.isNotEmpty() && currentGifIndexes[category] >= 0) {
             val gif = gifs[category]!![currentGifIndexes[category]]
