@@ -55,7 +55,7 @@ class PlaceholderFragment(private val gifRequester: GifRequester) : Fragment() {
                 Glide.with(this).load(it).placeholder(circularProgressDrawable).centerCrop()
                     .into(imageView)
             } else {
-                Glide.with(this).load(R.drawable.cloud).into(imageView)
+                Glide.with(this).load(R.color.white).into(imageView)
             }
         }
 

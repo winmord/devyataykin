@@ -26,6 +26,7 @@ class GifRequester {
     }
 
     fun getCurrentGif(category: Int) {
+        gifUrl.postValue("")
         description.postValue("")
         if (gifs[category]!!.isNotEmpty() && currentGifIndexes[category] >= 0) {
             val gif = gifs[category]!![currentGifIndexes[category]]
