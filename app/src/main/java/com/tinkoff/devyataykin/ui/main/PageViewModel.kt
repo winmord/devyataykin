@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 
 class PageViewModel(gifRequester: GifRequester) : ViewModel() {
     private val _index = MutableLiveData<Int>()
-    val text: LiveData<String> = gifRequester.description
-    val gifUrl: LiveData<String> = gifRequester.gifUrl
+    val text: LiveData<String?> = gifRequester.description
+    val gifUrl: LiveData<String?> = gifRequester.gifUrl
 
     fun setIndex(index: Int) {
         _index.value = index

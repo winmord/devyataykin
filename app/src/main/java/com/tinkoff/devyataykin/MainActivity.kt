@@ -32,12 +32,26 @@ class MainActivity : AppCompatActivity() {
 
         val nextGifButton = binding.nextButton
         nextGifButton.setOnClickListener {
-            gifRequester.getGif(viewPager.currentItem, "")
+            gifRequester.getGif(viewPager.currentItem)
         }
 
         val prevGifButton = binding.backButton
         prevGifButton.setOnClickListener {
-            gifRequester.getPrev()
+            gifRequester.getPrev(viewPager.currentItem)
         }
+
+        tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                gifRequester.getCurrentGif(tab!!.position)
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
+        })
     }
 }
+
+

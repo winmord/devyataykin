@@ -9,17 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.tinkoff.devyataykin.R
 import com.tinkoff.devyataykin.databinding.FragmentMainBinding
 
-/**
- * A placeholder fragment containing a simple view.
- */
 class PlaceholderFragment(private val gifRequester: GifRequester) : Fragment() {
     private lateinit var pageViewModel: PageViewModel
     private var _binding: FragmentMainBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,23 +42,19 @@ class PlaceholderFragment(private val gifRequester: GifRequester) : Fragment() {
         imageView.clipToOutline = true
 
         pageViewModel.gifUrl.observe(viewLifecycleOwner, Observer {
-            Glide.with(this).load(it).centerCrop().into(imageView)
+            if(it!!.isNotEmpty()) {
+                Glide.with(this).load(it).centerCrop().into(imageView)
+            } else {
+                Glide.with(this).load(R.drawable.loading).into(imageView)
+            }
         })
 
         return root
     }
 
     companion object {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
         private const val ARG_SECTION_NUMBER = "section_number"
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
         @JvmStatic
         fun newInstance(sectionNumber: Int, gifRequester: GifRequester): PlaceholderFragment {
             return PlaceholderFragment(gifRequester).apply {
