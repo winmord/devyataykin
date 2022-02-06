@@ -59,7 +59,7 @@ class PlaceholderFragment(private val gifRequester: GifRequester) : Fragment() {
                 centerCrop().
                 into(imageView)
             } else {
-                Glide.with(this).load(R.drawable.loading).into(imageView)
+                //Glide.with(this).load(R.drawable.loading).into(imageView)
             }
         })
 

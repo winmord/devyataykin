@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val gifRequester = GifRequester()
+    private val buttonIndexes = mutableListOf(0, 0, 0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,18 +32,34 @@ class MainActivity : AppCompatActivity() {
         tabs.setupWithViewPager(viewPager)
 
         val nextGifButton = binding.nextButton
+        val prevGifButton = binding.backButton
+
         nextGifButton.setOnClickListener {
             gifRequester.getGif(viewPager.currentItem)
+            if(buttonIndexes[viewPager.currentItem]++ == 0) {
+                prevGifButton.setBackgroundResource(R.drawable.back)
+            }
         }
 
-        val prevGifButton = binding.backButton
         prevGifButton.setOnClickListener {
             gifRequester.getPrev(viewPager.currentItem)
+            if((buttonIndexes[viewPager.currentItem] - 1) == 0) {
+                prevGifButton.setBackgroundResource(R.drawable.back_inactive)
+            }
+            if(buttonIndexes[viewPager.currentItem] > 0) {
+                --buttonIndexes[viewPager.currentItem]
+            }
         }
 
         tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                gifRequester.getCurrentGif(tab!!.position)
+                val position = tab!!.position
+                gifRequester.getCurrentGif(position)
+                if(buttonIndexes[position] == 0) {
+                    prevGifButton.setBackgroundResource(R.drawable.back_inactive)
+                } else {
+                    prevGifButton.setBackgroundResource(R.drawable.back)
+                }
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {

@@ -4,4 +4,6 @@
     <string name="tab_text_2">Лучшие</string>
     <string name="tab_text_3">Горячие</string>
     <string name="gif">gif</string>
+    <string name="back_button">back_button</string>
+    <string name="next_button">next_button</string>
 </resources>
