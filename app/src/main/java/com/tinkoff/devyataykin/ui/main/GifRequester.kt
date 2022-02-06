@@ -12,6 +12,7 @@ class GifRequester {
     private val client: OkHttpClient = OkHttpClient()
     val gifUrl = MutableLiveData<String?>()
     val description = MutableLiveData<String?>()
+    var online = true
 
     private var currentGifIndexes = mutableListOf(-1, -1, -1)
     private val gifCurrentPages = mutableListOf(0, 0, 0)
@@ -28,12 +29,14 @@ class GifRequester {
     fun getCurrentGif(category: Int) {
         gifUrl.postValue("")
         description.postValue("")
-        if (gifs[category]!!.isNotEmpty() && currentGifIndexes[category] >= 0) {
-            val gif = gifs[category]!![currentGifIndexes[category]]
-            gifUrl.postValue(gif.first)
-            description.postValue(gif.second)
-        } else {
-            getNextGif(category)
+        if(online) {
+            if (gifs[category]!!.isNotEmpty() && currentGifIndexes[category] >= 0) {
+                val gif = gifs[category]!![currentGifIndexes[category]]
+                gifUrl.postValue(gif.first)
+                description.postValue(gif.second)
+            } else {
+                getNextGif(category)
+            }
         }
     }
 
@@ -72,7 +75,7 @@ class GifRequester {
 
         val urlRequest =
             Builder().scheme(URL_SCHEME).authority(URL_AUTHORITY).appendPath(gifCategory)
-                .appendPath("${gifCurrentPages[category]++}")
+                .appendPath("${gifCurrentPages[category]}")
                 .appendQueryParameter("json", "true").build().toString()
 
         return Request.Builder().url(urlRequest).build()
@@ -83,18 +86,27 @@ class GifRequester {
         val jsonResult = JSONTokener(responseBody).nextValue() as JSONObject
         val jsonArray = jsonResult.getJSONArray("result")
 
+        if (jsonArray.length() == 0) {
+            gifUrl.postValue("empty")
+            description.postValue("")
+            return
+        }
+
+        var gifReceived = false
+
         for (i in 0 until jsonArray.length()) {
             val jsonObject = jsonArray.getJSONObject(i)
             val url = jsonObject.getString("gifURL")
             val desc = jsonObject.getString("description")
 
-            if (i == 0) {
-                gifUrl.postValue(url)
-                description.postValue(desc)
-                ++currentGifIndexes[category]
-            }
-
             if (url.isNotEmpty() && desc.isNotEmpty()) {
+                if (!gifReceived) {
+                    gifUrl.postValue(url)
+                    description.postValue(desc)
+                    ++currentGifIndexes[category]
+                    gifReceived = true
+                    gifCurrentPages[category]++
+                }
                 gifs[category]!!.add(Pair(url, desc))
             }
         }
@@ -116,6 +128,11 @@ class GifRequester {
                 }
             }
         })
+    }
+
+    fun clearGif() {
+        gifUrl.postValue("")
+        description.postValue("")
     }
 
     companion object {

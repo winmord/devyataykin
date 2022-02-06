@@ -43,6 +43,7 @@ class PlaceholderFragment(private val gifRequester: GifRequester) : Fragment() {
         }
 
         val imageView = binding.gifImageView
+        val emptyCategoryTextView = binding.emptyCategoryTextView
         imageView.clipToOutline = true
 
         val circularProgressDrawable = CircularProgressDrawable(this.requireContext())
@@ -51,11 +52,20 @@ class PlaceholderFragment(private val gifRequester: GifRequester) : Fragment() {
         circularProgressDrawable.start()
 
         pageViewModel.gifUrl.observe(viewLifecycleOwner) {
-            if (it!!.isNotEmpty()) {
-                Glide.with(this).load(it).placeholder(circularProgressDrawable).centerCrop()
-                    .into(imageView)
+            if (it!! != "empty") {
+                if (it.isNotEmpty()) {
+                    if (emptyCategoryTextView.visibility != View.GONE) {
+                        emptyCategoryTextView.visibility = View.GONE
+                    }
+
+                    Glide.with(this).load(it).placeholder(circularProgressDrawable).centerCrop()
+                        .into(imageView)
+                } else {
+                    Glide.with(this).load(R.color.white).into(imageView)
+                }
             } else {
                 Glide.with(this).load(R.color.white).into(imageView)
+                emptyCategoryTextView.visibility = View.VISIBLE
             }
         }
 

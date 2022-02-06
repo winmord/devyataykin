@@ -6,4 +6,7 @@
     <string name="gif">gif</string>
     <string name="back_button">back_button</string>
     <string name="next_button">next_button</string>
+    <string name="no_internet">Произошла ошибка при загрузке данных. Проверьте подключение к сети.</string>
+    <string name="no_internet_retry">ПОВТОРИТЬ</string>
+    <string name="EmptyCategory">Здесь пока ничего нет.</string>
 </resources>
