@@ -5,29 +5,29 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="100dp"
+    android:layout_marginTop="@dimen/gif_fragment_margin_top"
     tools:context=".ui.main.PlaceholderFragment">
 
     <ImageView
         android:id="@+id/gif_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginBottom="80dp"
+        android:layout_marginStart="@dimen/gif_image_margin_start"
+        android:layout_marginTop="@dimen/gif_image_margin_top"
+        android:layout_marginEnd="@dimen/gif_image_margin_end"
+        android:layout_marginBottom="@dimen/gif_image_margin_bottom"
         android:background="@drawable/round_outline"
         android:contentDescription="@string/gif"
-        android:layout_marginStart="2dp"
-        android:layout_marginEnd="2dp"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/section_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/desc_margin_start"
+        android:layout_marginEnd="@dimen/desc_margin_end"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:textColor="@color/white"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         tools:layout_constraintLeft_creator="1"
